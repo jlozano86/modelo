@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Ventas NG On-Line</title>
+  <title>Spring MVC / Thymeleaf</title>
 
   <!-- Custom fonts for this template-->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -26,7 +26,7 @@
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="index.html">Ventas NG On-Line</a>
+    <a class="navbar-brand mr-1" href="index.html">Spring MVC / Thymeleaf</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
       <i class="fas fa-bars"></i>
@@ -58,9 +58,25 @@
     <div id="content-wrapper">
 
       <div class="container-fluid">
-
-		
-
+			<h1 class="mt-4">Env&iacute;o de objetos a p&aacute;gina</h1>
+			<div class="card mb-4">
+            	<div class="card-body">
+            		<p class="mb-0">Este es un ejemplo de uso del objeto ModelAndView. Objeto enviado por el controlador:</p>
+            			<b><span th:text="${hora}" /></b>
+            	</div>
+            </div>
+            
+            <h1 class="mt-4">Iteraci&oacute;n de colecciones</h1>
+			<div class="card mb-4">
+            	<div class="card-body">
+            		<p class="mb-0">Iterando una colecci&oacute;n enviada por ModelAndView:</p>
+            		<table>
+            			<tr th:each="c : ${colores}">
+            				<td th:text="${c}" />
+            			</tr>
+            		</table>
+            	</div>
+            </div>
       </div>
       <!-- /.container-fluid -->
 

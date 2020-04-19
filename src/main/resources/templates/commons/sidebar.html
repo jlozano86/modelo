@@ -4,30 +4,7 @@
 		<li class="nav-item active"><a class="nav-link" href="index.html">
 				<i class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span>
 		</a></li>
-		<div sec:authorize="hasAuthority('ADMIN')">
-			<li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
-			href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
-			aria-haspopup="true" aria-expanded="false"> <i
-				class="fas fa-fw fa-folder"></i> <span>Administraci&oacute;n</span>
-			</a>
-			<div class="dropdown-menu" aria-labelledby="pagesDropdown">
-				<a class="dropdown-item" th:href="@{/indexUsuarios}">Usuarios</a>
-				<a class="dropdown-item" th:href="@{/indexProductos}">Productos</a>
-				<a class="dropdown-item" th:href="@{/indexSucursales}">Sucursales</a>
-			</div>
-		</li>
-		</div>
 		
-			<li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
-			href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
-			aria-haspopup="true" aria-expanded="false"> <i
-				class="fas fa-fw fa-folder"></i> <span>Reportes</span>
-			</a>
-			<div class="dropdown-menu" aria-labelledby="pagesDropdown">
-				<a class="dropdown-item" th:href="@{/indexReporteClientes}">Reporte de Clientes</a>
-				<a class="dropdown-item" th:href="@{/indexReporteCompras}">Reporte de Compras</a>
-			</div>
-		</li>
 	
 	</ul>
 </div>
