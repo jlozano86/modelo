@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="stylesheet" type="text/css" media="all" href="../css/ui/sweet-alert.css" th:href="@{/css/ui/sweetalert.css}" />
+  <script type="text/javascript" th:src="@{/js/ui/sweetalert.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/jquery/jquery.min.js}"></script>
+
+  <title>SB Admin - Register</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+<script type="text/javascript">
+	function ingresar(){
+		var f;
+		
+		f="nombres=" + $('#nombres').val() + "&apellidos=" + $('#apellidos').val() + "&usuario=" + $('#usuario').val() + "&correo=" + $('#correo').val() + "&password=" + $('#password').val();
+		
+		swal({
+			title: "Crear usuario",
+            text: "Está seguro de crear el usuario?",
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true,
+        }, function (isConfirm) {
+        	
+        	if(isConfirm){
+        		 $.ajax({
+                     url: "./registrar",
+                 	 data: f,
+                     type: "POST",
+                     success: function(json){
+                    	 swal({
+                             title: 'Exito',
+                             text: 'Usuario guardado con exito.',
+                             type: "success",
+                             allowOutsideClick: false,
+                             confirmButtonText: "Ok",
+                             closeOnConfirm: false,
+                             closeOnCancel: true
+                         });
+                     },
+                     error: function(e){
+                    	 swal({
+                             title: 'Error inesperado',
+                             text: 'Ocurri\u00F3 un error. Contacte al administrador del sistema.',
+                             type: "error",
+                             allowOutsideClick: false,
+                             confirmButtonText: "Ok",
+                             closeOnConfirm: false,
+                             closeOnCancel: true
+                         });
+                     }
+                 });
+        	}
+        	
+        });
+		
+	}
+</script>
+<body class="bg-dark">
+
+  <div class="container">
+    <div class="card card-register mx-auto mt-5">
+      <div class="card-header">Registrar cuenta</div>
+      <div class="card-body">
+        <form th:action="@{/registrar}" method="POST">
+          <div class="form-group">
+            <div class="form-row">
+            	<div class="col-md-4">
+            		Nombres:
+            	</div>
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="text" id="nombres" class="form-control" placeholder="Nombre" required="required" autofocus="autofocus" name="nombres">
+                  <label for="firstName">Nombre</label><br>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+            	<div class="col-md-4">
+            		Apellidos:
+            	</div>
+            	<div class="col-md-6">
+	                <div class="form-label-group">
+	                  <input type="text" id="apellidos" class="form-control" placeholder="Apellido" required="required" name="apellidos">
+	                  <label for="lastName">Apellidos</label><br>
+	                </div>
+              </div>
+            </div>
+            <div class="form-row">
+            	<div class="col-md-4">
+            		Usuario:
+            	</div>
+            	<div class="col-md-6">
+	            	<div class="form-label-group">
+	                  <input type="text" id="usuario" class="form-control" placeholder="Usuario" required="required" name="usuario">
+	                  <label for="lastName">Nombre de usuario:</label><br>
+	                </div>
+                </div>
+            </div>
+            <div class="form-row">
+            	<div class="col-md-4">
+            		Password:
+            	</div>
+            	<div class="col-md-6">
+	            	<div class="form-label-group">
+	                  <input type="password" id="password" class="form-control" placeholder="Password" required="required" name="password">
+	                  <label for="inputPassword">Password</label>
+	                </div>
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+            	<div class="col-md-4">
+            		Correo:
+            	</div>
+            	<div class="col-md-6">
+	            	<div class="form-label-group">
+	                  <input type="email" id="correo" class="form-control" placeholder="Correo" required="required" name="correo">
+              		<label for="inputEmail">Correo</label><br>
+	                </div>
+                </div>
+            </div>
+
+              
+          </div>
+          <input type="button" class="btn btn-secondary" value="Regresar" onclick="location.href='./indexUsuarios'" />
+          <input type="button" class="btn btn-primary" value="Registrar" onclick="ingresar()"/>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+</body>
+
+</html>
