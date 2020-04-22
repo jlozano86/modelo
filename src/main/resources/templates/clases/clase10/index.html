@@ -53,12 +53,48 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:replace="commons/sidebar :: sidebar" />
+    <ul th:replace="commons/sidebar :: sidebar" />
 
     <div id="content-wrapper">
 
       <div class="container-fluid">
-			<h1 class="mt-4">Aplicaci&oacute;n Modelo - Programaci&oacute;n N-Capas</h1>
+			<h1 class="mt-4">Formulario con HttpServletRequest</h1>
+			<div class="card mb-4">
+            	<div class="card-body">
+            		<p class="mb-0">Ingrese sus credenciales:</p><br/>
+            		<form method="post" th:action="@{/parametros1}">
+	            		<div class="form-group"><label class="small mb-1" for="usuario">Usuario</label><input class="form-control py-4" id="usuario" type="text" placeholder="Ingrese Usuario" style="width: 400px" name="usuario" /></div>
+	                    <div class="form-group"><label class="small mb-1" for="password">Contrase&ntilde;a</label><input class="form-control py-4" id="password" type="password" placeholder="Ingrese Contrasena" style="width: 400px" name="password"/></div>
+	                    <div class="form-group"><input type="submit" class="btn btn-primary" value="Iniciar Sesi&oacute;n"></a></div>
+	                </form>
+            	</div>
+            </div>
+            
+            <h1 class="mt-4">Formulario con @RequestParam</h1>
+			<div class="card mb-4">
+            	<div class="card-body">
+            		<p class="mb-0">Ingrese sus credenciales:</p><br/>
+            		<form method="post" th:action="@{/parametros2}">
+	            		<div class="form-group"><label class="small mb-1" for="usuario">Usuario</label><input class="form-control py-4" id="usuario" type="text" placeholder="Ingrese Usuario" style="width: 400px" name="usuario" /></div>
+	                    <div class="form-group"><label class="small mb-1" for="password">Contrase&ntilde;a</label><input class="form-control py-4" id="password" type="password" placeholder="Ingrese Contrasena" style="width: 400px" name="password"/></div>
+	                    <div class="form-group"><input type="submit" class="btn btn-primary" value="Iniciar Sesi&oacute;n"></a></div>
+	                </form>
+            	</div>
+            </div>
+            
+            <h1 class="mt-4">@RequestParam - Propiedad "value"</h1>
+			<div class="card mb-4">
+            	<div class="card-body">
+            		<p class="mb-0">Ingrese sus credenciales:</p><br/>
+            		<form method="post" th:action="@{/parametros3}">
+	            		<div class="form-group"><label class="small mb-1" for="usuario">Usuario</label><input class="form-control py-4" id="usuario" type="text" placeholder="Ingrese Usuario" style="width: 400px" name="user" /></div>
+	                    <div class="form-group"><label class="small mb-1" for="password">Contrase&ntilde;a</label><input class="form-control py-4" id="password" type="password" placeholder="Ingrese Contrasena" style="width: 400px" name="pass"/></div>
+	                    <div class="form-group"><input type="submit" class="btn btn-primary" value="Iniciar Sesi&oacute;n"></a></div>
+	                </form>
+            	</div>
+            </div>
+            
+            
       </div>
       <!-- /.container-fluid -->
 
