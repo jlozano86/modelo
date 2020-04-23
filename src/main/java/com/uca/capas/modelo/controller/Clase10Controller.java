@@ -45,7 +45,19 @@ public class Clase10Controller {
 	
 	@RequestMapping("/parametros3")
 	public ModelAndView parametros3(@RequestParam(value="user") String usuario, 
-			@RequestParam(value="pass") String password) {
+			@RequestParam(value="pass") String password,
+			@RequestParam(value="rol") String rol) {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("user", usuario);
+		mav.addObject("pass", password);
+		mav.setViewName("clases/clase10/resultado");
+		return mav;
+	}
+	
+	@RequestMapping("/parametros4")
+	public ModelAndView parametros4(@RequestParam(value="user") String usuario, 
+			@RequestParam(value="pass") String password,
+			@RequestParam(value="rol") String rol) {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("user", usuario);
 		mav.addObject("pass", password);
