@@ -20,7 +20,7 @@ public class ClienteController {
 		ModelAndView mav = new ModelAndView();
 		Cliente c = clienteDao.findOne(codigo);
 		mav.addObject("cliente", c);
-		mav.setViewName("clases/clase12/cliente");
+		mav.setViewName("clases/clase13/cliente");
 		return mav;
 	}
 
