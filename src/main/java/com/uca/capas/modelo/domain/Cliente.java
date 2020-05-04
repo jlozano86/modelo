@@ -39,7 +39,7 @@ public class Cliente {
 	private String sapellidos;
 	
 	@NotNull(message = "El campo Fecha no puede quedar vacio")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	//@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "f_nacimiento")
 	private Calendar fnacimiento;
 	
