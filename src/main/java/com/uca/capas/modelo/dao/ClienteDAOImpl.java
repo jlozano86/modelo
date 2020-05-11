@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uca.capas.modelo.domain.Cliente;
 
@@ -65,6 +66,17 @@ public class ClienteDAOImpl implements ClienteDAO {
 		 */
 		Cliente c = entityManager.find(Cliente.class, codigo);
 		return c;
+	}
+
+	public void save(Cliente c) throws DataAccessException {
+		
+		if(c.getCcliente() == null) { //Si la propiedad de la llave primaria viene vacío, entonces es un INSERT
+			entityManager.persist(c); //Utilizamos persist ya que es un INSERT
+		}
+		else { //Caso contrario, se busco al cliente, por lo que la propiedad ccliente viene llena (el input hidden del formulario)
+			entityManager.merge(c); //Utilizamos merge ya que es un UPDATE
+		}
+		
 	}
 
 }

@@ -23,5 +23,25 @@ public class ClienteController {
 		mav.setViewName("clases/clase13/cliente");
 		return mav;
 	}
+	
+	/*
+	 * Este metodo es igual al anterior, lo unico que redirige a la pagina cliente de la Clase 15
+	 */
+	@RequestMapping("/buscarcliente15")
+	public ModelAndView buscar15(@RequestParam Integer codigo) {
+		ModelAndView mav = new ModelAndView();
+		Cliente c = clienteDao.findOne(codigo);
+		mav.addObject("cliente", c);
+		mav.setViewName("clases/clase15/cliente");
+		return mav;
+	}
+	
+	@RequestMapping("/nuevocliente")
+	public ModelAndView nuevoCliente() {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("cliente", new Cliente());
+		mav.setViewName("clases/clase15/cliente");
+		return mav;
+	}
 
 }

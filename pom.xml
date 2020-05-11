@@ -13,6 +13,7 @@
 	<artifactId>modelo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>modelo</name>
+	<packaging>war</packaging>
 	<description>Spring MVC y Thymeleaf</description>
 
 	<properties>
@@ -39,6 +40,11 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

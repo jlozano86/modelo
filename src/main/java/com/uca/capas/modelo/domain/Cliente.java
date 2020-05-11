@@ -5,22 +5,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(schema = "store", name = "cliente")
@@ -28,7 +24,7 @@ public class Cliente {
 
 	@Id
 	@GeneratedValue(generator="cliente_c_cliente_seq", strategy = GenerationType.AUTO)
-	@SequenceGenerator(name = "cliente_c_cliente_seq", sequenceName = "store.cliente_c_cliente_seq")
+	@SequenceGenerator(name = "cliente_c_cliente_seq", sequenceName = "store.cliente_c_cliente_seq", allocationSize = 1)
 	@Column(name = "c_cliente")
 	private Integer ccliente;
 	
@@ -39,9 +35,9 @@ public class Cliente {
 	private String sapellidos;
 	
 	@NotNull(message = "El campo Fecha no puede quedar vacio")
-	//@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "f_nacimiento")
-	private Calendar fnacimiento;
+	private Date fnacimiento;
 	
 	@Column(name = "b_activo")
 	private Boolean bactivo;
@@ -70,11 +66,11 @@ public class Cliente {
 		this.sapellidos = sapellidos;
 	}
 
-	public Calendar getFnacimiento() {
+	public Date getFnacimiento() {
 		return fnacimiento;
 	}
 
-	public void setFnacimiento(Calendar fnacimiento) {
+	public void setFnacimiento(Date fnacimiento) {
 		this.fnacimiento = fnacimiento;
 	}
 	
@@ -114,9 +110,11 @@ public class Cliente {
 	}
 	
 	public String getEdadDelegate() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(this.fnacimiento);
 		if (this.fnacimiento == null) return "";
 		else {
-			LocalDate localFnacimiento = LocalDateTime.ofInstant(fnacimiento.toInstant(), fnacimiento.getTimeZone().toZoneId()).toLocalDate();
+			LocalDate localFnacimiento = LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()).toLocalDate();
 			int edad = Period.between(localFnacimiento, LocalDate.now()).getYears();
 			return new Integer(edad).toString();
 		}
