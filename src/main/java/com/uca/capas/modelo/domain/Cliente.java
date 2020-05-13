@@ -6,17 +6,22 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.uca.capas.modelo.domain.Vehiculo;
 
 @Entity
 @Table(schema = "store", name = "cliente")
@@ -41,6 +46,9 @@ public class Cliente {
 	
 	@Column(name = "b_activo")
 	private Boolean bactivo;
+	
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+	private List<Vehiculo> vehiculos;
 
 	public Integer getCcliente() {
 		return ccliente;
@@ -80,6 +88,14 @@ public class Cliente {
 
 	public void setBactivo(Boolean bactivo) {
 		this.bactivo = bactivo;
+	}
+	
+	public List<Vehiculo> getVehiculos() {
+		return vehiculos;
+	}
+
+	public void setVehiculoList(List<Vehiculo> vehiculoList) {
+		this.vehiculos = vehiculoList;
 	}
 
 	//Delegate para conversion de fecha
