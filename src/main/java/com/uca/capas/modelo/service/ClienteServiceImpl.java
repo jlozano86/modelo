@@ -9,19 +9,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.uca.capas.modelo.dao.ClienteDAO;
 import com.uca.capas.modelo.domain.Cliente;
+import com.uca.capas.modelo.repositories.ClienteRepository;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
 	
 	@Autowired
 	ClienteDAO clienteDao;
+	
+	@Autowired
+	ClienteRepository clienteRepository;
 
 	public List<Cliente> findAll() throws DataAccessException {
-		return clienteDao.findAll();
+		return clienteRepository.findAll();
 	}
 
 	public Cliente findOne(Integer codigo) throws DataAccessException {
-		return clienteDao.findOne(codigo);
+		return clienteRepository.getOne(codigo);
 	}
 	
 	@Transactional

@@ -6,19 +6,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.uca.capas.modelo.dao.ClienteDAO;
 import com.uca.capas.modelo.domain.Cliente;
+import com.uca.capas.modelo.service.ClienteService;
 
 @Controller
 public class ClienteController {
 	
 	@Autowired
-	ClienteDAO clienteDao;
+	ClienteService clienteService;
 	
 	@RequestMapping("/buscarcliente")
 	public ModelAndView buscar(@RequestParam Integer codigo) {
 		ModelAndView mav = new ModelAndView();
-		Cliente c = clienteDao.findOne(codigo);
+		Cliente c = clienteService.findOne(codigo);
 		mav.addObject("cliente", c);
 		mav.setViewName("clases/clase13/cliente");
 		return mav;
@@ -30,7 +30,7 @@ public class ClienteController {
 	@RequestMapping("/buscarcliente15")
 	public ModelAndView buscar15(@RequestParam Integer codigo) {
 		ModelAndView mav = new ModelAndView();
-		Cliente c = clienteDao.findOne(codigo);
+		Cliente c = clienteService.findOne(codigo);
 		mav.addObject("cliente", c);
 		mav.setViewName("clases/clase15/cliente");
 		return mav;
@@ -42,7 +42,7 @@ public class ClienteController {
 	@RequestMapping("/buscarcliente16")
 	public ModelAndView buscar16(@RequestParam Integer codigo) {
 		ModelAndView mav = new ModelAndView();
-		Cliente c = clienteDao.findOne(codigo);
+		Cliente c = clienteService.findOne(codigo);
 		mav.addObject("cliente", c);
 		mav.setViewName("clases/clase16/cliente");
 		return mav;
