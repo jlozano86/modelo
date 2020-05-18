@@ -47,7 +47,7 @@ public class Cliente {
 	@Column(name = "b_activo")
 	private Boolean bactivo;
 	
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
 	private List<Vehiculo> vehiculos;
 
 	public Integer getCcliente() {

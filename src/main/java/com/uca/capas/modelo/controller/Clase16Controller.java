@@ -19,5 +19,15 @@ public class Clase16Controller {
 	public String index13() {
 		return "clases/clase16/index";
 	}
+	
+	@RequestMapping("/guardar16")
+	public ModelAndView guardarCliente(@ModelAttribute Cliente cliente) {
+		ModelAndView mav = new ModelAndView();
+		//Mando a llamar al servicio encargado de guardar a la entidad
+		clienteService.save(cliente);
+		mav.setViewName("clases/clase16/index");
+		mav.addObject("resultado", 1);
+		return mav;
+	}
 
 }
