@@ -19,9 +19,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import com.uca.capas.modelo.domain.Vehiculo;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(schema = "store", name = "cliente")
@@ -47,7 +47,8 @@ public class Cliente {
 	@Column(name = "b_activo")
 	private Boolean bactivo;
 	
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+	@JsonIgnore
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
 	private List<Vehiculo> vehiculos;
 
 	public Integer getCcliente() {
