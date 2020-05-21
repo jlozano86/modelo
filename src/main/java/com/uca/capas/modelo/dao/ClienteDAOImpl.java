@@ -44,6 +44,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 		 * 2. La referencia de la clase a la que queremos mapear el resultado (Cliente)
 		 */
 		Query query = entityManager.createNativeQuery(sb.toString(), Cliente.class);
+
 		/*
 		 * Ejecutamos la consulta con el metodo getResultList() de nuestro objeto Query
 		 * el cual devolvera una lista del tipo definido anteriormente (Cliente.class)
