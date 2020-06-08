@@ -6,6 +6,8 @@ import java.util.List;
 import com.uca.capas.modelo.domain.Cliente;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
@@ -36,5 +38,14 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     //Devuelve los clientes que tengan la coleccion de nombres enviados como parametro
     public List<Cliente> findBySnombresIn(List<String> nombres);
+
+    @Query(value = "SELECT * from store.cliente", nativeQuery = true)
+    public List<Cliente> findAllClientes();
+
+    @Query(value = "SELECT * from store.cliente where c_cliente = :cliente", nativeQuery = true)
+    public Cliente findClienteById(@Param("cliente") Integer cliente);
+
+    @Query(value = "SELECT * from store.cliente where s_nombres = ?1 or s_apellidos = ?2", nativeQuery = true)
+    public List<Cliente> findClientesNombreApel(String nombre, String apellido);
 
 }

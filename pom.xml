@@ -65,7 +65,7 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
-	</dependencies>
+ </dependencies>
 
 	<build>
 		<plugins>
