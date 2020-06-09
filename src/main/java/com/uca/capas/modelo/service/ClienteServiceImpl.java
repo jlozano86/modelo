@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,9 +114,12 @@ public class ClienteServiceImpl implements ClienteService {
 		return clienteRepository.findAll(page);
 	}
 
-	@Override
 	public Long countAll() {
 		return clienteRepository.count();
+	}
+
+	public List<Cliente> findAll(Sort sort) {
+		return clienteRepository.findAll(sort);
 	}
 
 }

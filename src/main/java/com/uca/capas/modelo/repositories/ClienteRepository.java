@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.uca.capas.modelo.domain.Cliente;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -47,5 +48,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     @Query(value = "SELECT * from store.cliente where s_nombres = ?1 or s_apellidos = ?2", nativeQuery = true)
     public List<Cliente> findClientesNombreApel(String nombre, String apellido);
+
+    public List<Cliente> findAll(Sort sort);
 
 }

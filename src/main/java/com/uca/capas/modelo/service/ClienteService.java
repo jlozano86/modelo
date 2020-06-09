@@ -2,15 +2,18 @@ package com.uca.capas.modelo.service;
 
 import java.util.List;
 
+import com.uca.capas.modelo.domain.Cliente;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import com.uca.capas.modelo.domain.Cliente;
+import org.springframework.data.domain.Sort;
 
 public interface ClienteService {
 	
 	public List<Cliente> findAll() throws DataAccessException;
+
+	public List<Cliente> findAll(Sort sort);
 
 	public Page<Cliente> findAll(Pageable page) throws DataAccessException;
 

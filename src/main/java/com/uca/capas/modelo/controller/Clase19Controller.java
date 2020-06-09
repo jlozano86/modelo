@@ -46,7 +46,11 @@ public class Clase19Controller {
     
     @RequestMapping("/clase19/verclientes")
     public @ResponseBody List<Cliente> verClientes(){
-        return clienteService.findAllClientes();
+		/**
+		 * Traigo a todos los clientes ordenados por el objeto Sort
+		 */
+		Sort sort = Sort.by(Direction.ASC, "ccliente");
+        return clienteService.findAll(sort);
     }
 
     @RequestMapping("/clase19/buscarclientes")
@@ -65,7 +69,9 @@ public class Clase19Controller {
 		List<String[]> data = new ArrayList<>();
 		
 		for(Cliente u : clientes) {
-			data.add(new String[] {u.getCcliente().toString(), u.getSnombres(), u.getSapellidos(), u.getFechaDelegate(), u.getBactivo() == true ? "Activo" : "Inactivo"});
+			data.add(new String[] {u.getCcliente().toString(), u.getSnombres(), 
+				u.getSapellidos(), u.getFechaDelegate(), 
+				u.getBactivo() == true ? "Activo" : "Inactivo"});
 		}
 		
 		TableDTO dto = new TableDTO();
