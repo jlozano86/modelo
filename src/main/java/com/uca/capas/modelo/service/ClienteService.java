@@ -29,4 +29,6 @@ public interface ClienteService {
 
 	public List<Cliente> findClientesNombreApel(String nombres, String apellidos);
 
+	public Integer actualizarClientes(Integer cliente, Boolean estado);
+
 }

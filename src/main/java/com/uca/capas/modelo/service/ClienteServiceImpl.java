@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
+import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -25,6 +30,9 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Autowired
 	ClienteRepository clienteRepository;
+
+	@PersistenceContext(unitName = "modelo-persistence")
+	EntityManager entityManager;
 
 	public List<Cliente> findAll() throws DataAccessException {
 		return clienteRepository.findAll();
@@ -120,6 +128,30 @@ public class ClienteServiceImpl implements ClienteService {
 
 	public List<Cliente> findAll(Sort sort) {
 		return clienteRepository.findAll(sort);
+	}
+
+	@Transactional
+	public Integer actualizarClientes(Integer cliente, Boolean estado) {
+		int res = 0;
+		//Creo una instancia con el nombre del procedimiento a ejecutar
+		StoredProcedureQuery storedProcedure = entityManager.createStoredProcedureQuery("store.sp_actualizar_cliente");
+
+		//Registrando parametros del procedimiento
+		storedProcedure.registerStoredProcedureParameter("P_CLIENTE", Integer.class, ParameterMode.IN);
+		storedProcedure.registerStoredProcedureParameter("P_ESTADO", Boolean.class, ParameterMode.IN);
+		storedProcedure.registerStoredProcedureParameter("P_SALIDA", Integer.class, ParameterMode.OUT);
+
+		//Seteando valores a los parametros de entrada al procedimiento
+		storedProcedure.setParameter("P_CLIENTE", cliente);
+		storedProcedure.setParameter("P_ESTADO", estado);
+
+		//Ejecutando el procedimiento
+		storedProcedure.execute();
+
+		//Obtengo el valor del parametro de salida
+		res = (int) storedProcedure.getOutputParameterValue("P_SALIDA");
+
+		return res;
 	}
 
 }

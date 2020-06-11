@@ -78,7 +78,7 @@ public class Clase19Controller {
 		dto.setData(data);
 		dto.setDraw(draw);
 		dto.setRecordsFiltered(clienteService.countAll().intValue());
-		dto.setRecordsTotal(clienteService.countAll().intValue());
+		dto.setRecordsTotal(clienteService.countAll().intValue());	
 		
 		return dto;
     }
