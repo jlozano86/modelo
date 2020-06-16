@@ -1,7 +1,9 @@
 package com.uca.capas.modelo.service;
 
+import java.text.ParseException;
 import java.util.List;
 
+import com.uca.capas.modelo.dto.ClienteDTO;
 import com.uca.capas.modelo.domain.Cliente;
 
 import org.springframework.dao.DataAccessException;
@@ -30,5 +32,15 @@ public interface ClienteService {
 	public List<Cliente> findClientesNombreApel(String nombres, String apellidos);
 
 	public Integer actualizarClientes(Integer cliente, Boolean estado);
+
+	/***************Clase 21 **************************************************/
+	public List<ClienteDTO> getClienteEstado(Integer estado);
+
+	public List<ClienteDTO> getClienteFechaEstado(String fecha, Integer estado) throws ParseException;
+
+	public List<ClienteDTO> getClienteFecha(String fecha) throws ParseException;
+
+	public List<ClienteDTO> getClienteMarca(String marca);
+	/************************************************************************* */
 
 }

@@ -1,14 +1,22 @@
 package com.uca.capas.modelo.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
 import javax.persistence.StoredProcedureQuery;
+
+import com.uca.capas.modelo.dao.ClienteDAO;
+import com.uca.capas.modelo.domain.Cliente;
+import com.uca.capas.modelo.dto.ClienteDTO;
+import com.uca.capas.modelo.repositories.ClienteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -17,10 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.uca.capas.modelo.dao.ClienteDAO;
-import com.uca.capas.modelo.domain.Cliente;
-import com.uca.capas.modelo.repositories.ClienteRepository;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -152,6 +156,78 @@ public class ClienteServiceImpl implements ClienteService {
 		res = (int) storedProcedure.getOutputParameterValue("P_SALIDA");
 
 		return res;
+	}
+
+	public List<ClienteDTO> getClienteEstado(Integer estado) {
+		// TODO Auto-generated method stub
+		Boolean estadoB = estado == 1 ? true : false;
+
+		List<ClienteDTO> clientes = clienteDao.getClientesEstado(estadoB).stream().map(c -> {
+			ClienteDTO dto = new ClienteDTO();
+			dto.setCodigo(c.getCcliente().toString());
+			dto.setNombres(c.getSnombres());
+			dto.setApellidos(c.getSapellidos());
+			dto.setFechaNacimiento(c.getFechaDelegate());
+			return dto;
+		}).collect(Collectors.toList());
+
+		return clientes;
+	}
+
+	@Override
+	public List<ClienteDTO> getClienteFecha(String fecha) throws ParseException {
+		//La fecha se recibe en el formato anio-mes-dia
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(sdf.parse(fecha));
+
+		List<ClienteDTO> clientes = clienteDao.getClientesFechaNacimiento(cal).stream().map(c -> {
+			ClienteDTO dto = new ClienteDTO();
+			dto.setCodigo(c.getCcliente().toString());
+			dto.setNombres(c.getSnombres());
+			dto.setApellidos(c.getSapellidos());
+			dto.setFechaNacimiento(c.getFechaDelegate());
+			return dto;
+		}).collect(Collectors.toList());
+
+		return clientes;
+	}
+
+	@Override
+	public List<ClienteDTO> getClienteFechaEstado(String fecha, Integer estado) throws ParseException {
+		// La fecha se recibe en el formato anio-mes-dia
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(sdf.parse(fecha));
+
+		List<ClienteDTO> clientes = clienteDao.getClientesFechaEstado(cal, estado == 1 ? true : false).stream()
+				.map(c -> {
+					ClienteDTO dto = new ClienteDTO();
+					dto.setCodigo(c.getCcliente().toString());
+					dto.setNombres(c.getSnombres());
+					dto.setApellidos(c.getSapellidos());
+					dto.setFechaNacimiento(c.getFechaDelegate());
+					return dto;
+				}).collect(Collectors.toList());
+
+		return clientes;
+	}
+
+	@Override
+	public List<ClienteDTO> getClienteMarca(String marca) {
+		// TODO Auto-generated method stub
+		List<ClienteDTO> clientes = clienteDao.getClientesMarcaVehiculo(marca).stream().map(c -> {
+			ClienteDTO dto = new ClienteDTO();
+			dto.setCodigo(c.getCcliente().toString());
+			dto.setNombres(c.getSnombres());
+			dto.setApellidos(c.getSapellidos());
+			dto.setFechaNacimiento(c.getFechaDelegate());
+			return dto;
+		}).collect(Collectors.toList());
+
+		return clientes;
 	}
 
 }

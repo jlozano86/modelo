@@ -1,15 +1,20 @@
 package com.uca.capas.modelo.dao;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import com.uca.capas.modelo.domain.Cliente;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
-
-import com.uca.capas.modelo.domain.Cliente;
 
 /*
  * Esta anotacion le dice a Spring que este es un objeto DAO, por lo que sera
@@ -77,6 +82,109 @@ public class ClienteDAOImpl implements ClienteDAO {
 			entityManager.merge(c); //Utilizamos merge ya que es un UPDATE
 		}
 		
+	}
+
+	public List<Cliente> getClientesEstado(Boolean estado) {
+		// Obtengo el objeto para crear las querys
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+		// Obtenemos el objeto que representara a la consulta tipeado a la entidad
+		// correspondiente
+		CriteriaQuery<Cliente> query = cb.createQuery(Cliente.class);
+
+		// Creo el objeto que me representa el FROM de la consulta, en este caso de la
+		// entidad Clientes
+		Root<Cliente> clientes = query.from(Cliente.class);
+
+		// Creamos el WHERE, definido por el objeto Predicate y creamos las condiciones
+		// auxiliandonos de los metodos
+		// provistos por el objeto CriteriaBuilder
+		Predicate predicate = cb.equal(clientes.get("bactivo"), estado);
+
+		// Ahora construimos toda la consulta con cada objeto creado
+		query.select(clientes).where(predicate);
+
+		// Ejecutamos la consulta
+		List<Cliente> resultado = entityManager.createQuery(query).getResultList();
+
+		return resultado;
+	}
+
+	public List<Cliente> getClientesFechaNacimiento(Calendar fecha) {
+		// Obtengo el objeto para crear las querys
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+		// Obtenemos el objeto que representara a la consulta tipeado a la entidad
+		// correspondiente
+		CriteriaQuery<Cliente> query = cb.createQuery(Cliente.class);
+
+		// Creo el objeto que me representa el FROM de la consulta, en este caso de la
+		// entidad Clientes
+		Root<Cliente> clientes = query.from(Cliente.class);
+
+		// Creamos el WHERE, definido por el objeto Predicate y creamos las condiciones
+		// auxiliandonos de los metodos provistos por el objeto CriteriaBuilder
+		// En este caso buscaremos los clientes con fecha de nacimiento mayor o igual a la ingresada por parametro
+		Predicate predicate = cb.greaterThan(clientes.get("fnacimiento"), fecha.getTime());
+
+		// Ahora construimos toda la consulta con cada objeto creado
+		query.select(clientes).where(predicate);
+
+		// Ejecutamos la consulta
+		List<Cliente> resultado = entityManager.createQuery(query).getResultList();
+
+		return resultado;
+	}
+
+	public List<Cliente> getClientesFechaEstado(Calendar fecha, Boolean estado) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+		CriteriaQuery<Cliente> query = cb.createQuery(Cliente.class);
+
+		Root<Cliente> clientes = query.from(Cliente.class);
+
+		// Como ahora tendremos dos condicionales utilizamos el metodo conjunction del
+		// CriteriaBuilder
+		// para crear un "conjunto" vacio inicialmente, y dentro del cual iremos
+		// agregando las condiciones
+		// con el metodo "and" del CriteriaBuilder
+		Predicate predicate = cb.conjunction();
+
+		// Vamos construyendo condicion por condicion
+		predicate = cb.and(predicate, cb.greaterThan(clientes.get("fnacimiento"), fecha.getTime()));
+		predicate = cb.and(predicate, cb.equal(clientes.get("bactivo"), estado));
+
+		query.select(clientes).where(predicate);
+
+		List<Cliente> resultado = entityManager.createQuery(query).getResultList();
+
+		return resultado;
+	}
+
+	public List<Cliente> getClientesMarcaVehiculo(String marca) {
+		// TODO Auto-generated method stub
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+		CriteriaQuery<Cliente> query = cb.createQuery(Cliente.class);
+
+		Root<Cliente> clientes = query.from(Cliente.class);
+
+		// Navego hacia la entidad Vehiculo con el metodo "join" del objeto Root, que
+		// recibe de parametro
+		// el nombre de la propiedad a realizar el Join, y como segundo parametro
+		// (opcional) el tipo de Join
+		// definido en la enumeracion JoinType, si no se establece entonces por defecto
+		// es INNER JOIN
+		// Luego con el metodo get defino la propiedad por la cual se hara la condicion
+		// ya en el contexto del vehiculo
+		Predicate predicate = cb.equal(clientes.join("vehiculos").get("smarca"), marca);
+
+		// Hago un distinct, ya que si un cliente tiene N vehiculos, vendran N clientes
+		query.distinct(true).select(clientes).where(predicate);
+
+		List<Cliente> resultado = entityManager.createQuery(query).getResultList();
+
+		return resultado;
 	}
 
 }
