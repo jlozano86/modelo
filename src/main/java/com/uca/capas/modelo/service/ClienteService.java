@@ -43,4 +43,16 @@ public interface ClienteService {
 	public List<ClienteDTO> getClienteMarca(String marca);
 	/************************************************************************* */
 
+	public void insertClienteNoAutoId(Cliente c);
+
+	public int insertClienteAutoId(Cliente c);
+
+	public void updateCliente(Cliente c);
+
+	public int cambiarEstadoVehiculos(Integer cliente, Boolean estado);
+
+	public int[][] cargaMasiva() throws ParseException;
+
+	public void delete(Cliente c);
+
 }

@@ -7334,7 +7334,7 @@ button.bg-dark:focus {
   position: sticky !important;
 }
 
-.fixed-top, .sb-nav-fixed #layoutSidenav #layoutSidenav_nav, .sb-nav-fixed .sb-topnav {
+.fixed-top, .sb-nav-fixed #layoutSidenav #sidebar, .sb-nav-fixed .sb-topnav {
   position: fixed;
   top: 0;
   right: 0;
@@ -9996,7 +9996,7 @@ body {
 #layoutSidenav {
   display: flex;
 }
-#layoutSidenav #layoutSidenav_nav {
+#layoutSidenav #sidebar {
   flex-basis: 225px;
   flex-shrink: 0;
   transition: transform 0.15s ease-in-out;
@@ -10014,7 +10014,7 @@ body {
   margin-left: -225px;
 }
 
-.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+.sb-sidenav-toggled #layoutSidenav #sidebar {
   transform: translateX(0);
 }
 .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
@@ -10032,7 +10032,7 @@ body {
 }
 
 @media (min-width: 992px) {
-  #layoutSidenav #layoutSidenav_nav {
+  #layoutSidenav #sidebar {
     transform: translateX(0);
   }
   #layoutSidenav #layoutSidenav_content {
@@ -10040,7 +10040,7 @@ body {
     transition: margin 0.15s ease-in-out;
   }
 
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+  .sb-sidenav-toggled #layoutSidenav #sidebar {
     transform: translateX(-225px);
   }
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
@@ -10053,15 +10053,15 @@ body {
 .sb-nav-fixed .sb-topnav {
   z-index: 1039;
 }
-.sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
+.sb-nav-fixed #layoutSidenav #sidebar {
   width: 225px;
   height: 100vh;
   z-index: 1038;
 }
-.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
+.sb-nav-fixed #layoutSidenav #sidebar .sb-sidenav {
   padding-top: 56px;
 }
-.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav .sb-sidenav-menu {
+.sb-nav-fixed #layoutSidenav #sidebar .sb-sidenav .sb-sidenav-menu {
   overflow-y: auto;
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_content {

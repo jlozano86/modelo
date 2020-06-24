@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 
 import com.uca.capas.modelo.domain.Cliente;
+import com.uca.capas.modelo.domain.Vehiculo;
 
 public interface ClienteDAO {
 	
@@ -22,5 +23,16 @@ public interface ClienteDAO {
 	public List<Cliente> getClientesMarcaVehiculo(String marca);
 
 	public List<Cliente> getClientesFechaEstado(Calendar fecha, Boolean estado);
+
+	/************** JdbcTemplate **** ************************/
+	public void insertClienteNoAutoId(Cliente c);
+
+	public int insertClienteAutoId(Cliente c);
+
+	public void updateCliente(Cliente c);
+
+	public int ejecutarProcedimiento(Integer cliente, Boolean estado);
+
+	public int[][] batchInsertVehiculos(final List<Vehiculo> vehiculos);
 
 }

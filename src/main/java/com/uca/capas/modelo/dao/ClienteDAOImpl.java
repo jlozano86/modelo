@@ -1,7 +1,12 @@
 package com.uca.capas.modelo.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,8 +17,16 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.uca.capas.modelo.domain.Cliente;
+import com.uca.capas.modelo.domain.Vehiculo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 /*
@@ -34,6 +47,16 @@ public class ClienteDAOImpl implements ClienteDAO {
 	 */
 	@PersistenceContext(unitName = "modelo-persistence")
 	EntityManager entityManager;
+
+	/**
+	 * Definimos el objeto JdbcTemplate y lo inyectamos con la anotacion Autowired
+	 */
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+
+	private static final String sql1 = "SELECT * FROM store.cliente WHERE c_cliente = :cliente";
+
+	private static final String sql2 = "UPDATE store.cliente SET s_nombres = ?, s_apellidos = ?, f_nacimiento = ?, b_activo = ? WHERE c_cliente = ?";
 
 	@Override
 	public List<Cliente> findAll() throws DataAccessException {
@@ -183,6 +206,129 @@ public class ClienteDAOImpl implements ClienteDAO {
 		query.distinct(true).select(clientes).where(predicate);
 
 		List<Cliente> resultado = entityManager.createQuery(query).getResultList();
+
+		return resultado;
+	}
+
+	@Override
+	public void insertClienteNoAutoId(Cliente c) {
+		// Clase que depende de JdbcTemplate que permite realizar inserts a nivel de
+		// JDBC
+		// La sentencia INSERT no se especifica como tal, sino que el catalogo/table se
+		// definen
+		// con el metodo withSchemaName y withTableName de dicho objeto
+		SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withSchemaName("store")
+				.withTableName("cliente");
+
+		// Como el usuario no sabe que llave primaria debe llevar el registro lo
+		// obtenemos de la secuencia
+		Integer secuencia = jdbcTemplate.queryForObject("SELECT NEXTVAL(\'store.cliente_c_cliente_seq\')",
+				Integer.class);
+
+		// Defino en un mapa de tipo <String, Object> los nombres de las columnas y los
+		// respectivos
+		// valores con que se realizara el insert
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		parametros.put("c_cliente", secuencia);
+		parametros.put("s_nombres", c.getSnombres());
+		parametros.put("s_apellidos", c.getSapellidos());
+		parametros.put("f_nacimiento", c.getFnacimiento());
+		parametros.put("b_activo", c.getBactivo());
+
+		jdbcInsert.execute(parametros);
+
+	}
+
+	@Override
+	public int insertClienteAutoId(Cliente c) {
+		// Clase que permite realizar inserts a nivel de JDBC
+		// Se le especifica el esquema, la tabla y la columna (pk) que es autogenerada
+		// por el DBMS
+		SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withSchemaName("store")
+				.withTableName("cliente").usingGeneratedKeyColumns("c_cliente");
+
+		// Defino en un mapa de tipo <String, Object> los nombres de las columnas y los
+		// respectivos
+		// valores con que se realizara el insert
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		parametros.put("s_nombres", c.getSnombres());
+		parametros.put("s_apellidos", c.getSapellidos());
+		parametros.put("f_nacimiento", c.getFnacimiento());
+		parametros.put("b_activo", c.getBactivo());
+
+		// El metodo executeAndReturnKey devuelve la llave primaria generada en el
+		// insert
+		Number id_generated = jdbcInsert.executeAndReturnKey(parametros);
+
+		return id_generated.intValue();
+
+	}
+
+	@Override
+	public void updateCliente(Cliente c) {
+		// Array de objeto que contiene los parametros en el orden en que estan
+		// definidos en el statement (variable sql2)
+		Object[] parametros = new Object[] { c.getSnombres(), c.getSapellidos(), c.getFnacimiento(), c.getBactivo(),
+				c.getCcliente() };
+
+		// Metodo update del jdbcTemplate que recibe de parametros:
+		// 1. SQL a ejecutar (update)
+		// 2. Parametros como object array (Object[])
+		jdbcTemplate.update(sql2, parametros);
+
+	}
+
+	@Override
+	public int ejecutarProcedimiento(Integer cliente, Boolean estado) {
+		// Esta clase permite ejecutar procedimientos almacenados a partir de un
+		// JdbcTemplate
+		// Recibe de parametros el objeto JdbcTemplate, el esquema y el procedimiento
+		// con los parametros withSchemaName y withProcedureName
+		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+			.withSchemaName("store")
+			.withProcedureName("sp_actualizar_cliente")
+			.withoutProcedureColumnMetaDataAccess();
+
+		// Se registran los parametros en el objeto correspondiente
+		// Si es parametro de entrada -> new SqlParameter
+		// Si es parametro de salida -> new SqlOutParameter
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_cliente", Types.INTEGER));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_estado", Types.BOOLEAN));
+		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_salida", Types.INTEGER));
+
+		// Creamos un mapa con los nombres de los parametros y sus valores
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("p_cliente", cliente);
+		parametros.put("p_estado", estado);
+
+		// Al ejecutar el procedimiento devolvera un Map<String, Object>
+		// con los N parametros de salida
+		Map<String, Object> out = jdbcCall.execute(parametros);
+
+		return Integer.parseInt(out.get("p_salida").toString());
+
+	}
+
+	public int[][] batchInsertVehiculos(final List<Vehiculo> vehiculos) {
+		String sql = "INSERT INTO store.vehiculo "
+				+ "(c_vehiculo, s_marca, s_modelo, s_chassis, f_compra, b_estado, c_cliente) VALUES (?,?,?,?,?,?,?)";
+
+		int[][] resultado = jdbcTemplate.batchUpdate(sql, vehiculos, 1000,
+				new ParameterizedPreparedStatementSetter<Vehiculo>() {
+
+					@Override
+					public void setValues(PreparedStatement ps, Vehiculo v) throws SQLException {
+						ps.setInt(1, v.getCvehiculo());
+						ps.setString(2, v.getSmarca());
+						ps.setString(3, v.getSmodelo());
+						ps.setString(4, v.getSchassis());
+						java.sql.Date fcompra = new java.sql.Date(v.getFcompra().getTime().getTime());
+						ps.setDate(5, fcompra);
+						ps.setBoolean(6, v.getBestado());
+						ps.setInt(7, v.getCcliente());
+					}
+
+				});
 
 		return resultado;
 	}

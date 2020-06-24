@@ -1,5 +1,9 @@
 package com.uca.capas.modelo.service;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ import javax.persistence.StoredProcedureQuery;
 
 import com.uca.capas.modelo.dao.ClienteDAO;
 import com.uca.capas.modelo.domain.Cliente;
+import com.uca.capas.modelo.domain.Vehiculo;
 import com.uca.capas.modelo.dto.ClienteDTO;
 import com.uca.capas.modelo.repositories.ClienteRepository;
 
@@ -126,10 +131,6 @@ public class ClienteServiceImpl implements ClienteService {
 		return clienteRepository.findAll(page);
 	}
 
-	public Long countAll() {
-		return clienteRepository.count();
-	}
-
 	public List<Cliente> findAll(Sort sort) {
 		return clienteRepository.findAll(sort);
 	}
@@ -217,7 +218,6 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public List<ClienteDTO> getClienteMarca(String marca) {
-		// TODO Auto-generated method stub
 		List<ClienteDTO> clientes = clienteDao.getClientesMarcaVehiculo(marca).stream().map(c -> {
 			ClienteDTO dto = new ClienteDTO();
 			dto.setCodigo(c.getCcliente().toString());
@@ -228,6 +228,87 @@ public class ClienteServiceImpl implements ClienteService {
 		}).collect(Collectors.toList());
 
 		return clientes;
+	}
+
+	public void insertClienteNoAutoId(Cliente c) {
+		clienteDao.insertClienteNoAutoId(c);
+
+	}
+
+	public int insertClienteAutoId(Cliente c) {
+		return clienteDao.insertClienteAutoId(c);
+
+	}
+
+	public void updateCliente(Cliente c) {
+		clienteDao.updateCliente(c);
+	}
+
+	public int cambiarEstadoVehiculos(Integer cliente, Boolean estado) {
+		return clienteDao.ejecutarProcedimiento(cliente, estado);
+	}
+
+	public int[][] cargaMasiva() throws ParseException {
+		List<Vehiculo> vehiculos = prepararColeccion();
+		int[][] cantidad = clienteDao.batchInsertVehiculos(vehiculos);
+		return cantidad;
+	}
+
+	public List<Vehiculo> prepararColeccion() throws ParseException {
+		String csv = "C://deploys//vehiculos.csv";
+		List<Vehiculo> coleccion = new ArrayList<Vehiculo>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		try {
+
+			br = new BufferedReader(new FileReader(csv));
+			while ((line = br.readLine()) != null) {
+
+				String[] vStr = line.split(cvsSplitBy);
+				Vehiculo v = new Vehiculo();
+				v.setCvehiculo(Integer.parseInt(vStr[0]));
+				v.setSmarca(vStr[1]);
+				v.setSmodelo(vStr[2]);
+				v.setSchassis(vStr[3]);
+				cal.setTime(sdf.parse(vStr[4]));
+				v.setFcompra(cal);
+				v.setBestado(vStr[5].equals("t") ? true : false);
+				v.setCcliente(Integer.parseInt(vStr[6]));
+
+				coleccion.add(v);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return coleccion;
+	}
+
+	@Override
+	public Long countAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void delete(Cliente c) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

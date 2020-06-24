@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -62,6 +63,13 @@ public class JpaConfiguration {
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 		properties.setProperty("hibernate.enable_lazy_load_no_trans","true");
 		return properties;
+	}
+
+	@Bean
+	public JdbcTemplate jdbcTemplate(){
+		JdbcTemplate template = new JdbcTemplate();
+		template.setDataSource(dataSource());
+		return template;
 	}
 
 }
